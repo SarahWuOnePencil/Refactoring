@@ -40,27 +40,7 @@
     NSString *result = [NSString stringWithFormat:@"Rental record for %@ \n",_name];
    
     for (Rental *each in _rentals) {
-        double thisAmount = 0;
-        
-        switch (each.movie.priceCode) {
-            case MovieType_regular:
-                thisAmount += 2;
-                if (each.daysRented > 2) {
-                    thisAmount += (each.daysRented - 2) * 1.5;
-                }
-                break;
-            case MovieType_newRelease:
-                thisAmount += each.daysRented * 3;
-                break;
-            case MovieType_childrens:
-                thisAmount += 1.5;
-                if (each.daysRented > 3) {
-                    thisAmount += (each.daysRented - 3) * 1.5;
-                }
-                break;
-            default:
-                break;
-        }
+        double thisAmount = [self amountForRental:each];
         
         // add frequent renter points
         frequentRenterPoints ++;
@@ -75,5 +55,29 @@
     }
     
     return result;
+}
+
+- (double)amountForRental:(Rental *)each {
+    double thisAmount = 0;
+    switch (each.movie.priceCode) {
+        case MovieType_regular:
+            thisAmount += 2;
+            if (each.daysRented > 2) {
+                thisAmount += (each.daysRented - 2) * 1.5;
+            }
+            break;
+        case MovieType_newRelease:
+            thisAmount += each.daysRented * 3;
+            break;
+        case MovieType_childrens:
+            thisAmount += 1.5;
+            if (each.daysRented > 3) {
+                thisAmount += (each.daysRented - 3) * 1.5;
+            }
+            break;
+        default:
+            break;
+    }
+    return thisAmount;
 }
 @end
